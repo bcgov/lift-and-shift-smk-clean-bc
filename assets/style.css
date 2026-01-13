@@ -1,0 +1,168 @@
+@font-face {
+    font-family: 'BC Sans';
+    src: url('BCSans-Regular.woff') format('woff');
+}
+
+body {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: stretch;
+
+    font-family: 'BC Sans',Helvetica,Arial,sans-serif;
+}
+
+button, input {
+    font-family: inherit;
+}
+
+.header {
+    flex-shrink: 0;
+    border-bottom: 2px solid #fcba19;
+    background-color: #036;
+
+    background-image: url( 'BC-cleanbc_cmyk_rev_reduced.png' );
+    background-position: 10px 5px;
+    background-repeat: no-repeat;
+
+    color: white;
+    font-size: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+@media only screen and (min-width: 480px) {
+    .header::after {
+        display: block;
+        padding-left: 275px;
+        content: "CleanBC Fleet Route Planner";
+     }
+  }
+
+@media only screen and (max-width: 479px) {
+    .header::after {
+       display: block;
+       font-size: 55%;
+       padding-left: 260px;
+       min-height: 40px;
+       content: "Fleet Route Planner";
+    }
+ }
+
+article {
+    flex-grow: 1;
+    position: relative;
+}
+
+footer {
+    flex-shrink: 0;
+    border-top: 2px solid #fcba19;
+    background-color: #036;
+    color: white;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+#smk-map-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
+}
+
+dialog {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 50em;
+    max-height: calc( 100% - 5em );
+    z-index: 3;
+    padding: 0;
+    border: none;
+    min-height: auto;
+    height: unset;
+    background-color: transparent;
+}
+
+dialog form {
+    display:        flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 0;
+    background-color: white;
+}
+
+dialog header {
+    flex: none;
+}
+
+dialog section {
+    display:flex;
+    flex-direction:column;
+
+    font-size:18px;
+    overflow-y: auto;
+    padding-bottom: 18px;
+}
+
+dialog section p {
+    margin-bottom: 0;
+    margin-left:18px;
+    margin-right:18px;
+}
+
+dialog menu {
+    flex: none;
+    margin: 0;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+}
+
+dialog menu button {
+    background-color:rgb(0, 53, 95);
+    border: none;
+    color:rgb(255, 255, 255);
+    cursor:pointer;
+    font-size:14px;
+    outline: none;
+    padding: 9px;
+}
+
+dialog::backdrop {
+    background-color: black;
+    opacity: 0.8;
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+}
+
+dialog + .backdrop {
+    background-color: black;
+    opacity: 0.8;
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+}

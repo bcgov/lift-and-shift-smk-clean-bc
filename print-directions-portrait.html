@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>CleanBC Fleet Route Planner</title>
+        
+        <!-- SMK BOOTSTRAP - - - - - - - -->
+        <script src="./node_modules/@bcgov/smk/dist/smk.js"></script>
+        <!-- - - - - - - - - - - - - - - -->
+
+        <style>
+            @page {
+                margin: auto;
+                size: letter portrait;
+            }
+
+            body {
+                font-family: 'BC Sans',Helvetica,Arial,sans-serif;
+            }
+
+            article {
+                overflow: hidden;
+
+                min-height: 8.5in;
+                width: 6.85in;
+                margin: auto;
+
+                display: flex;
+                flex-direction: column;
+                page-break-after: always;
+            }
+
+            header {
+                height: 70px;
+
+                border-bottom:      2px solid #fcba19;
+                background-color: #fff;
+                color: #000;
+
+                display:            flex;
+                justify-content:    flex-start;
+                align-items:        center;
+            }
+
+            header .logo {
+                filter: invert( 0% );
+            } 
+
+            .build-info {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+
+                flex-grow: 1;
+                font-size: 12px;
+                color: #ccc;
+                padding-right: 10px;
+            }
+
+            header img {
+                margin-left:    10px;
+                margin-bottom:  10px;
+                height: 40px;
+            }
+
+            .header-title {
+                margin-left:    20px;
+                display:        flex;
+                flex-direction: column;
+                justify-content:center;
+                align-items:    flex-start;
+                font-size:      18px;
+            }
+
+            .page {
+                display: flex;               
+                flex-grow: 1; 
+            }
+
+            section {
+                display: flex;
+                flex-direction: column;
+                flex-basis: 100%;
+            }
+
+            .smk-map-frame {
+                flex: 1 1;
+                border: 2px solid black;
+                border-radius: 3px;
+            }
+
+            .waypoints {
+                padding: 0 0.5em;
+            }
+
+            .waypoint {
+                margin: 0.5em 0;
+                padding: 2px;
+                border-radius: 4px;
+            }
+
+            .start {
+                background-color: palegreen !important;
+                border-color: palegreen !important;
+            }
+
+            .finish {
+                background-color: #e99 !important;
+                border-color: #e99 !important;
+            }
+
+            .address {
+                font-size: 20px;
+                font-weight: bold;
+            }
+
+            .directions {
+                height: 100%;
+                padding: 0 0.5em;
+            }
+
+            .direction {
+                margin: 0.5em 0;
+                padding: 2px;
+                border-radius: 4px;
+
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+
+            .direction .prefix {
+                flex-basis: 100%;
+                font-size: 16px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+
+            .direction .index {
+                position: absolute;
+                left: 0px;
+                font-size: 12px;
+                font-weight: bold;
+                padding: 0px;
+                border-radius: 8px;
+                background-color: #fff;
+                height: 1%;
+            }
+
+            .direction.isTruckRoute .instruction {
+                color: blue;
+                font-style: normal;
+                font-weight: bold;
+                font-size: 15px;
+            }
+
+            .direction .instruction, .direction.isOversize .instruction {
+                flex-basis: 100%;
+                position: relative;
+                padding-left: 30px;
+
+                color: red;
+                font-style: italic;
+                font-weight: normal;
+                font-size: 12px;
+            }
+
+            .direction .metric {
+                font-size: 12px;
+                padding-left: 30px;
+            }
+
+            #route-pages .smk-map-frame .smk-route-tooltip {
+                font-size: 12px;
+                font-weight: bold;
+                padding: 0px;
+                border-radius: 8px;
+            }
+
+            .page-number {
+                text-align: right;
+            }
+
+            article.notifications .notification { 
+                margin-bottom: 1em;
+                font-size: 14px;
+                margin-top: 0;
+                margin-left:18px;
+                margin-right:18px;
+            }
+
+            article.notifications .notification p { 
+                margin-bottom: 0;
+                margin-top: 0;
+            }
+
+            article.notifications .notification ul { 
+                margin-bottom: .5em;
+                margin-top: .5em;
+            }
+
+            article.notifications .notification h2 { 
+                display: block;
+                font-size: 14px;
+                font-weight: bold;
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+
+            article.notifications activate-tool { 
+                display: none;
+            }
+
+            @media print {
+                header {
+                    background-color: white;
+                }
+
+                header .header-title {
+                    color: black;                    
+                }
+
+                header img {
+                    filter: invert(1);                    
+                }
+            }
+        </style>
+
+    </head>
+
+    <body>
+        <div id="vue-root"></div>
+
+        <template id="template">
+            <div id="route-pages">
+                <article>
+                    <header>
+                        <img src="assets/BC-cleanbc_cmyk_pos.png" alt="CleanBC Logo" class="logo">
+                        <div class="header-title">CleanBC Fleet Route Planner</div>
+                        <div class="build-info"></div>
+                    </header>
+                        
+                    <div class="page">
+                        <section>
+                            <div class="waypoints">
+                                <div class="waypoint"
+                                    v-for="w in waypoints"
+                                    v-bind:class="[ w.style || '' ]"
+                                >{{ w.label }} at
+                                    <span class="address" v-if="w.fullAddress">{{ w.fullAddress }}</span>
+                                    <span class="coordinates" v-else>
+                                        <span class="smk-ordinate">
+                                            <label>latitude <span>{{ w.latitude | formatNumber( 6, 3 ) }}</span></label>
+                                        </span>,
+                                        <span class="smk-ordinate">
+                                            <label>longitude <span>{{ w.longitude | formatNumber( 6, 3 ) }}</span></label>
+                                        </span>                    
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="smk-map-frame"
+                                v-content="overview"
+                            ></div>
+                        </section>
+                    </div>
+                </article>            
+
+                <article
+                    v-for="page in pages"
+                >
+                    <header>
+                        <img src="assets/BC-cleanbc_cmyk_pos.png" alt="CleanBC Logo" class="logo">
+                        <div class="header-title">CleanBC Fleet Route Planner</div>
+                    </header>
+                        
+                    <div class="page">
+                        <section>
+                            <div class="directions">
+                                <div class="direction"
+                                    v-for="d in page.directions"
+                                    v-bind:class="d.class"
+                                    xxxv-bind:class="[ d.waypointStyle || '' ]"
+                                >                                  
+                                    <div class="prefix" v-if="d.prefix">{{ d.prefix }}</div>
+
+                                    <span class="instruction" 
+                                    ><span class="index">#{{ d.index }}</span>{{ instructionTypePrefix( d.type, d.heading ) }} {{ d.name || d.text }}</span>
+                                    <span class="metric" v-if="d.distanceUnit"
+                                    >for {{ d.distanceUnit.value | dimensionalNumber( 1, d.distanceUnit.unit, 3 ) }} ({{ d.time | formatTime }})</span>
+
+                                    <div class="notifications" v-if="d.notifications">
+                                        <span class="notification" 
+                                            v-for="n in d.notifications"
+                                            v-bind:class="[ n.type ]"
+                                        >{{ n.message }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </article>     
+            </div>
+        </template>
+    </body>
+
+    <script>
+        include.option( { baseUrl: ( new URL( './node_modules/@bcgov/smk/dist/assets/src/lib', document.location ) ).toString() } )
+        include( 'vue', 'vue-config', 'turf' ).then( function () {
+            var key = location.search.substr( 1 )
+            var cfg = JSON.parse( window.sessionStorage.getItem( key ) )
+
+            var dirs = cfg.etc.directions
+            delete cfg.etc
+            var directions = cfg.tools.find( function ( t ) { return t.type == 'directions' } )
+            delete cfg.tools
+            cfg.tools = [ directions ]
+            var mapCfg = JSON.stringify( cfg )
+
+            var wl = dirs.waypoints.length
+            dirs.waypoints[ 0 ].label = 'Start'
+            dirs.waypoints[ 0 ].class = 'start'
+            for ( var i = 1; i < ( wl - 1 ); i += 1 ) {
+                dirs.waypoints[ i ].label = 'Waypoint #' + i
+            }
+            dirs.waypoints[ wl - 1 ].label = 'Finish'
+            dirs.waypoints[ wl - 1 ].class = 'finish'
+
+            function segmentPrefix( i ) {
+                var sg = dirs.segments.features[ i ].properties
+
+                if ( sg.isTruckRoute && !sg.isFerry && !sg.isOversize ) {
+                    return 'Starting Truck Route'
+                }
+                else if ( !sg.isTruckRoute && !sg.isFerry && !sg.isOversize ) {
+                    return 'Starting Route'
+                }
+                else if ( sg.isFerry ) {
+                    return 'Starting Ferry Trip'
+                }
+                else if ( sg.isOversize ) {
+                    return 'Starting Oversized Truck Route'
+                }
+                else {
+                    return ''
+                }
+            }
+
+            // modify directions by adding index and other data
+            var prevDir
+            dirs.directions.forEach( function ( d, i ) {
+                d.index = i + 1
+
+                // insert "Starting..." text as first direction
+                if ( !prevDir ) {
+                    d.prefix = segmentPrefix( d.segmentIndex )
+                    prevDir = d
+                    return
+                }
+
+                // last dir (finish) has no name
+                if ( !d.name ) {
+                    d.name = prevDir.name
+                }
+                prevDir = d
+            } )
+
+            var dirPages = [], dirPage = []
+            dirs.directions.forEach( function ( d ) {
+                dirPage.push( d )
+            } )
+            dirPages.push( dirPage )
+
+            var model = {
+                waypoints: dirs.waypoints,
+                overview: {},
+                pages: dirPages.map( function ( dp, i ) {
+                    return {
+                        index: i + 1,
+                        route: [],
+                        directions: dp,
+                        map: {}
+                    }
+                } )
+            }
+
+            model.overview.create = function ( el ) {                    
+                var c = JSON.parse( mapCfg )
+
+                var ls = turf.lineString( dirs.route )
+                var bb = turf.bbox( ls )
+                var diag = turf.distance( [ bb[0], bb[1] ], [ bb[2], bb[3] ] )
+
+                c.viewer.location = {
+                    extent: turf.bbox( turf.buffer( turf.bboxPolygon( bb ), diag * 0.1 ) ).concat( [ [ 0, 0 ], [ 200, 0 ] ] )
+                }
+
+                return SMK.INIT( {
+                    'smk-id':           'overview',
+                    'smk-container-sel': el,
+                    'smk-config':       [ c, 'hide-tool=all', 'show-tool=scale,legend' ]
+                } )
+            }
+
+            var instructionType = {
+                START:              [ 'trip_origin', null,      'Go on' ],
+                START_NORTH:        [ 'trip_origin', null,      'Head north on' ],
+                START_SOUTH:        [ 'trip_origin', null,      'Head south on' ],
+                START_EAST:         [ 'trip_origin', null,      'Head east on' ],
+                START_WEST:         [ 'trip_origin', null,      'Head west on' ],
+                CONTINUE:           [ 'expand_more', null,      'Continue onto'  ],
+                TURN_LEFT:          [ 'arrow_back', null,       'Turn left onto' ],
+                TURN_SLIGHT_LEFT:   [ 'undo', null,             'Slight turn left onto' ],
+                TURN_SHARP_LEFT:    [ 'directions', true,       'Sharp turn left onto' ],
+                TURN_RIGHT:         [ 'arrow_forward', null,    'Turn right onto' ],
+                TURN_SLIGHT_RIGHT:  [ 'undo', true,             'Slight turn right onto' ],
+                TURN_SHARP_RIGHT:   [ 'directions', null,       'Sharp turn right onto' ],
+                FERRY:              [ 'directions_boat', null,  'Board' ],
+                STOPOVER:           [ 'pause', null,            '' ],
+                FINISH:             [ 'stop', null,             '' ],
+            }
+
+            Vue.config.ignoredElements = [
+                'activate-tool'
+            ]
+
+            new Vue( {
+                el: '#vue-root',
+                template: '#template',
+                data: model,
+                mounted: function () {
+                    SMK.BOOT.then( function () {
+                        setTimeout( function () {
+                            window.print()
+                            window.parent.postMessage( 'printed', '*' )
+                        }, 2000 ) 
+                    } )
+                },
+                methods: {
+                    instructionTypePrefix: function ( type, heading ) {
+                        if ( heading ) type = type + '_' + heading
+                        if ( !instructionType[ type ] ) return ''
+                        return instructionType[ type ][ 2 ] || ''
+                    }
+                }
+            } )
+        } )
+    </script>
+</html>

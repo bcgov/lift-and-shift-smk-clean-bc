@@ -1,0 +1,817 @@
+{
+    "name": "smk-clean-bc",
+    "viewer": {
+        "type": "leaflet",
+        "location": {
+            "center": [
+                -124.76074218750001,
+                51.876490970614775
+            ],
+            "extent": [
+                -133.30810546875003,
+                46.9052455464292,
+                -116.21337890625001,
+                56.353077613860826
+            ],
+            "zoom": 6
+        },
+        "activeTool": "directions",
+        "esriApiKey": "ESRI_API_KEY",
+        "baseMap": "Streets"
+    },
+    "layers": [
+        {
+            "type": "vector",
+            "id": "evcs-stalls",
+            "title": "Government Charging Stations",
+            "isVisible": true,
+            "isQueryable": true,
+            "opacity": 0.65,
+            "minScale": null,
+            "maxScale": null,
+            "titleAttribute": "Charger_ID",
+            "attributes": [
+                {
+                    "id": "fid",
+                    "name": "FID",
+                    "title": "FID",
+                    "visible": false
+                },
+                {
+                    "id": "objectid",
+                    "name": "OBJECTID",
+                    "title": "OBJECTID",
+                    "visible": false
+                },
+                {
+                    "id": "bldng-id",
+                    "name": "Bldng_ID",
+                    "title": "Building #",
+                    "visible": true
+                },
+                {
+                    "id": "address",
+                    "name": "Address",
+                    "title": "Address",
+                    "visible": true
+                },
+                {
+                    "id": "city",
+                    "name": "City",
+                    "title": "City",
+                    "visible": true
+                },
+                {
+                    "id": "stall-type",
+                    "name": "Stall_Type",
+                    "title": "Stall Type",
+                    "visible": true
+                },
+                {
+                    "id": "network",
+                    "name": "Network",
+                    "title": "Network",
+                    "visible": true
+                },
+                {
+                    "id": "number",
+                    "name": "Number",
+                    "title": "Number",
+                    "visible": true
+                },
+                {
+                    "id": "charger-id",
+                    "name": "Charger_ID",
+                    "title": "Charger ID",
+                    "visible": true
+                }
+            ],
+            "queries": null,
+            "useClustering": false,
+            "dataUrl": "./layers/evcs-stalls.geojson",
+            "legend": {
+                "point": true,
+                "excludeOtherLegendWithDefaultStyling": true
+            },
+            "style": {
+                "strokeColor": "white",
+                "strokeOpacity": 1,
+                "strokeWidth": 9,
+                "strokeCap": "round",
+                "strokeJoin": "round",
+                "fill": true,
+                "fillColor": "#327fc3",
+                "fillOpacity": 1,
+                "stroke": true,
+                "marker": true,
+                "markerUrl": null
+            },
+            "conditionalStyles": [
+                {
+                    "property": "Stall_Type",
+                    "conditions": [
+                        {
+                            "label": "Employee/Public",
+                            "value": "Employee/Public",
+                            "style": {
+                                "strokeColor": "white",
+                                "fillColor": "#327fc3"
+                            }
+                        },
+                        {
+                            "label": "Fleet",
+                            "value": "Fleet",
+                            "style": {
+                                "strokeColor": "white",
+                                "fillColor": "#314272"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "vector",
+            "id": "rpd-buildings",
+            "title": "Government Buildings",
+            "isVisible": true,
+            "isQueryable": true,
+            "opacity": 0.65,
+            "minScale": null,
+            "maxScale": null,
+            "titleAttribute": "Bldg_ID",
+            "attributes": [
+                {
+                    "id": "fid",
+                    "name": "FID",
+                    "title": "FID",
+                    "visible": false
+                },
+                {
+                    "id": "bldg-id",
+                    "name": "Bldg_ID",
+                    "title": "Building #",
+                    "visible": true
+                },
+                {
+                    "id": "bldg-type",
+                    "name": "Bldg_Type",
+                    "title": "Building Type",
+                    "visible": true
+                },
+                {
+                    "id": "address",
+                    "name": "Address",
+                    "title": "Address",
+                    "visible": true
+                },
+                {
+                    "id": "city",
+                    "name": "City",
+                    "title": "City",
+                    "visible": true
+                }
+            ],
+            "queries": null,
+            "useClustering": false,
+            "dataUrl": "./layers/rpd-buildings.geojson",
+            "legend": {
+                "point": true
+            },
+            "style": {
+                "strokeColor": "white",
+                "strokeOpacity": 1,
+                "strokeWidth": 9,
+                "strokeCap": "round",
+                "strokeJoin": "round",
+                "fill": true,
+                "fillColor": "#3f8f28",
+                "fillOpacity": 1
+            }
+        },
+        {
+            "type": "vector",
+            "id": "electric-charging-stations-in-bc",
+            "title": "Electric Charging Stations in BC",
+            "isVisible": true,
+            "isQueryable": true,
+            "opacity": 0.65,
+            "minScale": null,
+            "maxScale": null,
+            "titleAttribute": "station_name",
+            "attributes": [
+                {
+                    "name": "GoogleMapsDirections",
+                    "title": "Google Maps Directions",
+                    "visible": true,
+                    "format": "asLink('https://www.google.com/maps/dir/' + this.feature.geometry.coordinates[1] + ',' + this.feature.geometry.coordinates[0])"
+                },
+                {
+                    "id": "station-name",
+                    "name": "station_name",
+                    "title": "Station Name",
+                    "visible": true
+                },
+                {
+                    "id": "street-address",
+                    "name": "street_address",
+                    "title": "Street Address",
+                    "visible": true
+                },
+                {
+                    "id": "intersection-directions",
+                    "name": "intersection_directions",
+                    "title": "Intersection Directions",
+                    "visible": true
+                },
+                {
+                    "id": "intersection-directions-fr",
+                    "name": "intersection_directions_fr",
+                    "title": "Intersection Directions - French",
+                    "visible": true
+                },
+                {
+                    "id": "city",
+                    "name": "city",
+                    "title": "City",
+                    "visible": true
+                },
+                {
+                    "id": "state",
+                    "name": "state",
+                    "title": "State",
+                    "visible": false
+                },
+                {
+                    "id": "zip",
+                    "name": "zip",
+                    "title": "ZIP",
+                    "visible": true
+                },
+                {
+                    "id": "plus4",
+                    "name": "plus4",
+                    "title": "Plus4",
+                    "visible": true
+                },
+                {
+                    "id": "station-phone",
+                    "name": "station_phone",
+                    "title": "Station Phone",
+                    "visible": true
+                },
+                {
+                    "id": "status-code",
+                    "name": "status_code",
+                    "title": "Status Code",
+                    "visible": false
+                },
+                {
+                    "id": "expected-date",
+                    "name": "expected_date",
+                    "title": "Expected Date",
+                    "visible": true
+                },
+                {
+                    "id": "groups-with-access-code",
+                    "name": "groups_with_access_code",
+                    "title": "Groups With Access Code",
+                    "visible": true
+                },
+                {
+                    "id": "groups-with-access-code-fr",
+                    "name": "groups_with_access_code_fr",
+                    "title": "Groups With Access Code - French",
+                    "visible": true
+                },
+                {
+                    "id": "access-days-time",
+                    "name": "access_days_time",
+                    "title": "Access Days Time",
+                    "visible": true
+                },
+                {
+                    "id": "access-days-time-fr",
+                    "name": "access_days_time_fr",
+                    "title": "Access Days Time - French",
+                    "visible": true
+                },
+                {
+                    "id": "cards-accepted",
+                    "name": "cards_accepted",
+                    "title": "Cards Accepted",
+                    "visible": true
+                },
+                {
+                    "id": "bd-blends",
+                    "name": "bd_blends",
+                    "title": "BD Blends",
+                    "visible": true
+                },
+                {
+                    "id": "bd-blends-fr",
+                    "name": "bd_blends_fr",
+                    "title": "BD Blends - French",
+                    "visible": true
+                },
+                {
+                    "id": "ng-fill-type-code",
+                    "name": "ng_fill_type_code",
+                    "title": "NG Fill Type Code",
+                    "visible": true
+                },
+                {
+                    "id": "ng-psi",
+                    "name": "ng_psi",
+                    "title": "NG PSI",
+                    "visible": true
+                },
+                {
+                    "id": "ev-level1-evse-num",
+                    "name": "ev_level1_evse_num",
+                    "title": "EV Level1 EVSE Ports",
+                    "visible": true
+                },
+                {
+                    "id": "ev-level2-evse-num",
+                    "name": "ev_level2_evse_num",
+                    "title": "EV Level2 EVSE Ports",
+                    "visible": true
+                },
+                {
+                    "id": "ev-dc-fast-num",
+                    "name": "ev_dc_fast_num",
+                    "title": "EV DC Fast Ports",
+                    "visible": true
+                },
+                {
+                    "id": "ev-other-evse",
+                    "name": "ev_other_evse",
+                    "title": "EV Other EVSE",
+                    "visible": true
+                },
+                {
+                    "id": "ev-network",
+                    "name": "ev_network",
+                    "title": "EV Network",
+                    "visible": true,
+                    "format": "asLink(this.feature.properties.ev_network_web)"
+                },
+                {
+                    "id": "ev-network-web",
+                    "name": "ev_network_web",
+                    "title": "ev_network_web",
+                    "visible": false
+                },
+                {
+                    "id": "geocode-status",
+                    "name": "geocode_status",
+                    "title": "Geocode Status",
+                    "visible": true
+                },
+                {
+                    "id": "date-last-confirmed",
+                    "name": "date_last_confirmed",
+                    "title": "Date Last Confirmed",
+                    "visible": true
+                },
+                {
+                    "id": "id",
+                    "name": "id",
+                    "title": "ID",
+                    "visible": false
+                },
+                {
+                    "id": "updated-at",
+                    "name": "updated_at",
+                    "title": "Updated At",
+                    "visible": true
+                },
+                {
+                    "id": "owner-type-code",
+                    "name": "owner_type_code",
+                    "title": "Owner Type Code",
+                    "visible": true
+                },
+                {
+                    "id": "open-date",
+                    "name": "open_date",
+                    "title": "Open Date",
+                    "visible": true
+                },
+                {
+                    "id": "ng-vehicle-class",
+                    "name": "ng_vehicle_class",
+                    "title": "NG Vehicle Class",
+                    "visible": true
+                },
+                {
+                    "id": "lpg-primary",
+                    "name": "lpg_primary",
+                    "title": "LPG Primary",
+                    "visible": true
+                },
+                {
+                    "id": "e85-blender-pump",
+                    "name": "e85_blender_pump",
+                    "title": "E85 Blender Pump",
+                    "visible": true
+                },
+                {
+                    "id": "ev-connector-types",
+                    "name": "ev_connector_types",
+                    "title": "EV Connector Types",
+                    "visible": true
+                },
+                {
+                    "id": "country",
+                    "name": "country",
+                    "title": "Country",
+                    "visible": false
+                },
+                {
+                    "id": "facility-type",
+                    "name": "facility_type",
+                    "title": "Facility Type",
+                    "visible": true
+                },
+                {
+                    "id": "cng-dispenser-num",
+                    "name": "cng_dispenser_num",
+                    "title": "CNG Dispenser Number",
+                    "visible": true
+                },
+                {
+                    "id": "cng-total-compression",
+                    "name": "cng_total_compression",
+                    "title": "CNG Total Compression",
+                    "visible": true
+                },
+                {
+                    "id": "cng-total-storage",
+                    "name": "cng_total_storage",
+                    "title": "CNG Total Storage",
+                    "visible": true
+                },
+                {
+                    "id": "e85-other-ethanol-blends",
+                    "name": "e85_other_ethanol_blends",
+                    "title": "E85 Other Ethanol Blends",
+                    "visible": true
+                },
+                {
+                    "id": "ev-pricing",
+                    "name": "ev_pricing",
+                    "title": "EV Pricing",
+                    "visible": true
+                },
+                {
+                    "id": "ev-pricing-fr",
+                    "name": "ev_pricing_fr",
+                    "title": "EV Pricing - French",
+                    "visible": true
+                },
+                {
+                    "id": "lpg-nozzle-types",
+                    "name": "lpg_nozzle_types",
+                    "title": "LPG Nozzle Types",
+                    "visible": true
+                },
+                {
+                    "id": "cng-fill-type-code",
+                    "name": "cng_fill_type_code",
+                    "title": "CNG Fill Type Code",
+                    "visible": true
+                },
+                {
+                    "id": "cng-psi",
+                    "name": "cng_psi",
+                    "title": "CNG PSI",
+                    "visible": true
+                },
+                {
+                    "id": "access-code",
+                    "name": "access_code",
+                    "title": "Access Code",
+                    "visible": false
+                },
+                {
+                    "id": "access-detail-code",
+                    "name": "access_detail_code",
+                    "title": "Access Detail Code",
+                    "visible": true
+                },
+                {
+                    "id": "fuel-type-code",
+                    "name": "fuel_type_code",
+                    "title": "Fuel Type Code",
+                    "visible": false
+                },
+                {
+                    "id": "restricted-access",
+                    "name": "restricted_access",
+                    "title": "Restricted Access",
+                    "visible": true
+                },
+                {
+                    "id": "cng-renewable-source",
+                    "name": "cng_renewable_source",
+                    "title": "CNG Renewable Source",
+                    "visible": true
+                },
+                {
+                    "id": "cng-vehicle-class",
+                    "name": "cng_vehicle_class",
+                    "title": "CNG Vehicle Class",
+                    "visible": true
+                },
+                {
+                    "id": "ev-renewable-source",
+                    "name": "ev_renewable_source",
+                    "title": "EV Renewable Source",
+                    "visible": true
+                },
+                {
+                    "id": "hy-is-retail",
+                    "name": "hy_is_retail",
+                    "title": "HY Is Retail",
+                    "visible": true
+                },
+                {
+                    "id": "hy-pressures",
+                    "name": "hy_pressures",
+                    "title": "HY Pressures",
+                    "visible": true
+                },
+                {
+                    "id": "hy-standards",
+                    "name": "hy_standards",
+                    "title": "HY Standards",
+                    "visible": true
+                },
+                {
+                    "id": "hy-status-link",
+                    "name": "hy_status_link",
+                    "title": "HY Status Link",
+                    "visible": true
+                },
+                {
+                    "id": "lng-renewable-source",
+                    "name": "lng_renewable_source",
+                    "title": "LNG Renewable Source",
+                    "visible": true
+                },
+                {
+                    "id": "lng-vehicle-class",
+                    "name": "lng_vehicle_class",
+                    "title": "LNG Vehicle Class",
+                    "visible": true
+                },
+                {
+                    "id": "rd-blends",
+                    "name": "rd_blends",
+                    "title": "RD Blends",
+                    "visible": true
+                },
+                {
+                    "id": "rd-blends-fr",
+                    "name": "rd_blends_fr",
+                    "title": "RD Blends - French",
+                    "visible": true
+                },
+                {
+                    "id": "rd-blended-with-biodiesel",
+                    "name": "rd_blended_with_biodiesel",
+                    "title": "RD Blended With Biodiesel",
+                    "visible": true
+                },
+                {
+                    "id": "rd-max-biodiesel-level",
+                    "name": "rd_max_biodiesel_level",
+                    "title": "RD Max Biodiesel Level",
+                    "visible": true
+                }
+            ],
+            "queries": null,
+            "useClustering": false,
+            "dataUrl": "https://developer.nrel.gov/api/alt-fuel-stations/v1.geojson?api_key=on232zJ8pxzqnErmjt4JN4WckYBuTA0u5kYvh9yH&access=public&fuel_type=ELEC&country=CA&state=BC&status=E",
+            "legend": {
+                "point": true,
+                "otherLegendLabelOverride": "Charging Stations"
+            },
+            "style": {
+                "strokeColor": "white",
+                "strokeOpacity": 1,
+                "strokeWidth": 9,
+                "strokeCap": "round",
+                "strokeJoin": "round",
+                "fill": true,
+                "fillColor": "#d05525",
+                "fillOpacity": 1,
+                "stroke": true,
+                "marker": true,
+                "markerUrl": null
+            },
+            "conditionalStyles": [
+                {
+                    "property": "ev_dc_fast_num",
+                    "conditions": [
+                        {
+                            "label": "DC Fast Charging Stations",
+                            "operator": ">=",
+                            "value": 1,
+                            "style": {
+                                "strokeColor": "#d05525",
+                                "fillColor": "white"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "tools": [
+        {
+            "type": "toolbar",
+            "enabled": true
+        },
+        {
+            "type": "list-menu",
+            "enabled": true,
+            "title": "CleanBC"
+        },
+        {
+            "type": "pan",
+            "enabled": true
+        },
+        {
+            "type": "zoom",
+            "enabled": true
+        },
+        {
+            "order": 10,
+            "position": "list-menu",
+            "icon": "help",
+            "title": "About CleanBC",
+            "content": "<p>The CleanBC Route Planner (CBRP) is intended to be an interactive, easy-to-understand trip-planning application for Fleet Vehicles within RPD. The web application's key features are the ability to see RPD properties and Ministry Electric Vehicle Charging Stations (EVCS), along with public charging stations and to plan your route accordingly. It is intended to augment, rather than replace, existing regional and municipal maps and trip planning tools.</p>",
+            "type": "about",
+            "enabled": true
+        },
+        {
+            "order": 2,
+            "position": [
+                "shortcut-menu",
+                "list-menu"
+            ],
+            "icon": "layers",
+            "title": "Layers",
+            "command": {
+                "allVisibility": true,
+                "filter": true,
+                "legend": true
+            },
+            "glyph": {
+                "visible": "visibility",
+                "hidden": "visibility_off"
+            },
+            "type": "layers",
+            "enabled": true,
+            "display": [
+                {
+                    "id": "evcs-stalls",
+                    "isVisible": true
+                },
+                {
+                    "id": "rpd-buildings",
+                    "isVisible": true
+                },
+                {
+                    "id": "electric-charging-stations-in-bc",
+                    "isVisible": true
+                }
+            ]
+        },
+        {
+            "type": "baseMaps",
+            "enabled": true
+        },
+        {
+            "type": "identify",
+            "enabled": true,
+            "showPanel": true,
+            "showWidget": true,
+            "style": {
+                "strokeWidth": 1,
+                "strokeStyle": "1, 1",
+                "strokeColor": "#000000",
+                "strokeOpacity": 0.8,
+                "fillColor": "#000000",
+                "fillOpacity": 0.5,
+                "markerSize": [
+                    20,
+                    20
+                ],
+                "markerOffset": [
+                    10,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "search",
+            "enabled": true
+        },
+        {
+            "type": "coordinate",
+            "enabled": true
+        },
+        {
+            "type": "measure",
+            "enabled": false
+        },
+        {
+            "type": "markup",
+            "enabled": false
+        },
+        {
+            "type": "scale",
+            "enabled": false
+        },
+        {
+            "type": "minimap",
+            "enabled": false
+        },
+        {
+            "order": 1,
+            "position": [
+                "toolbar"
+            ],
+            "icon": "directions_car",
+            "title": "Route Planner",
+            "geocoderService": {
+                "url": "https://geocoder.api.gov.bc.ca/",
+                "parameter": {
+                    "maxDistance": 50,
+                    "locationMode": "input",
+                    "brief": false,
+                    "minScore": 50,
+                    "echo": true
+                }
+            },
+            "routePlannerService": {
+                "url": "https://router.api.gov.bc.ca/"
+            },
+            "optimal": false,
+            "roundTrip": false,
+            "criteria": "fastest",
+            "truck": false,
+            "truckRoute": null,
+            "truckHeight": null,
+            "truckWidth": null,
+            "truckLength": null,
+            "truckWeight": null,
+            "command": {
+                "optimal": false,
+                "vehicleType": false
+            },
+            "type": "directions",
+            "enabled": true
+        },
+        {
+            "type": "location",
+            "enabled": false
+        },
+        {
+            "type": "select",
+            "enabled": false
+        },
+        {
+            "type": "geomark",
+            "geomarkService": {
+                "url": "https://apps.gov.bc.ca/pub/geomark"
+            },
+            "position": "list-menu",
+            "enabled": false
+        },
+        {
+            "type": "legend",
+            "enabled": true
+        },
+        {
+            "order": 11,
+            "position": "list-menu",
+            "icon": "help",
+            "title": "How to use the Route Planner",
+            "useComponent": true,
+            "component": {
+                "template": "<div><p>First, click on the Route Planner heading, enter an address or click directly on the map. Continue entering additional waypoints, which you can click and drag to update your route, or the start and end points. You can further augment this by clicking on the settings in the upper right corner of the route planner and choosing from the one-way or round-trip option and the shortest or fastest route option. You may also enter a range value in the settings; when the route distance exceeds the range value, a range limit marker will be added along the route. After you have completed your stops, click See Route Details to receive turn-by-turn instructions, or you can Print these instructions for ease of use.</p><p>Please note most trips are generally 200 km round trip, which is well within the range of most EVs when starting with a full battery charge. If you will be going on a more extended trip (over 200 km total) or the EV battery is not fully charged, it is recommended that you review your EV's range information and plan the best place to stop for a mid-route charge if necessary. For additional information on public charging stations, including availability: <a href='https://bchydro.com'>BC Hydro</a>, <a href='https://plugshare.com'>PlugShare.com</a> and <a href='https://chargehub.com'>ChargeHub.com</a> are helpful resources.</p></div>"
+            },
+            "type": "bespoke",
+            "instance": "101",
+            "enabled": true
+        }
+    ],
+    "version": "1.1.1",
+    "createdBy": "DataBC Map Team",
+    "createdDate": "2022-11-07T23:57:27.366Z"
+}

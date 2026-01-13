@@ -1,0 +1,79 @@
+# This action should:
+#  - trigger on merge of pr
+#  - tag the master with the image tag
+#  - deploy to prod
+#
+# https://github.community/t/run-action-only-when-a-pr-is-merged/18268
+
+name: deploy prod
+on:
+  pull_request:
+    branches: 
+      - main
+    types: 
+      - closed
+      
+# debugging
+# -------------
+# on: 
+#   push:
+#     branches: ['dev', 'smk-cdci']
+
+jobs:
+  deployprod:
+
+    # Commented out for testing
+    if: github.event.pull_request.merged == true
+    defaults:
+      run:
+        shell: bash
+    runs-on: ubuntu-22.04
+    env:
+      OPENSHIFT_SERVER_URL: ${{secrets.OPENSHIFT_SERVER_URL}}
+      OPENSHIFT_TOKEN_DEV: ${{secrets.OPENSHIFT_TOKEN_DEV}}
+      OPENSHIFT_TOKEN_PROD: ${{secrets.OPENSHIFT_TOKEN_PROD}}
+      GHCR_USER: ${{ secrets.GHCR_USER }}
+      GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+      ESRI_API_KEY: ${{ secrets.ESRI_API_KEY }}
+
+    steps:
+    # CHECKOUT THE CODE
+
+    - uses: actions/checkout@v4
+      id: checkout
+      with:
+        fetch-depth: 0
+
+    - name: Replace API Key
+      run: |
+        sed -i 's/ESRI_API_KEY/${{ secrets.ESRI_API_KEY }}/g' smk-config.json
+
+    - name: deploying prod
+      uses: bcgov/smk-actions/smk-deploy@main
+      id: deploySMKContainer
+      with:
+        OPENSHIFT_SERVER_URL: ${{ secrets.OPENSHIFT_SERVER_URL }}
+        OPENSHIFT_TOKEN_DEV: ${{ secrets.OPENSHIFT_TOKEN_DEV }}
+        OPENSHIFT_TOKEN_PROD: ${{ secrets.OPENSHIFT_TOKEN_PROD }}
+        GHCR_USER: ${{ secrets.GHCR_USER }}
+        GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+        DOCKER_REGISTRY: 'ghcr.io'
+        PR_REVIEWERS: '["ccossette"]'
+        PR_MENTIONS: '["ccossette"]'
+
+    # Add configMap with routing api key to the deployment config
+    - name: Login to Dev Openshift
+      id: oc-login
+      shell: bash
+      env:
+        OPENSHIFT_SERVER_URL: ${{ secrets.OPENSHIFT_SERVER_URL }}
+        OPENSHIFT_TOKEN_PROD: ${{ secrets.OPENSHIFT_TOKEN_PROD }}
+      run: |
+        echo ----- OC-LOGIN -----
+        # get oc client
+        curl https://downloads-openshift-console.apps.silver.devops.gov.bc.ca/amd64/linux/oc.tar -o oc.tar
+        tar -xvf oc.tar
+        curdir=$(pwd)
+        PATH=$curdir:$PATH
+        oc login --token=$OPENSHIFT_TOKEN_PROD --server=$OPENSHIFT_SERVER_URL
+        oc patch deployment smk-clean-bc-dp -p '[{"op":"add","path":"/spec/template/spec/containers/0/volumeMounts","value":[{"name":"config-volume","mountPath":"/srv/config"}]},{"op":"add","path":"/spec/template/spec/columes","value":{"name":"config-volume","configMap":{"name":"smk-clean-bc-prod-api-key","items":[{"key":"api-key","path":"route-planner.json"}]}}}]' --type json
