@@ -27,7 +27,7 @@ jobs:
       run:
         shell: bash
 
-    name: 'Build smk-clean-bc container image'
+    name: 'Build lift-and-shift-smk-clean-bc container image'
     # The type of runner that the job will run on
     runs-on: ubuntu-22.04
     env:
@@ -70,13 +70,13 @@ jobs:
         GHCR_USER: ${{ secrets.GHCR_USER }}
         GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
         DOCKER_REGISTRY: 'ghcr.io'
-        PR_REVIEWERS: '["michaelpnelson"]'
-        PR_MENTIONS: '["michaelpnelson"]'
+        PR_REVIEWERS: '["ccossette"]'
+        PR_MENTIONS: '["ccossette"]'
 
     - name: Deleting older images
       uses: actions/delete-package-versions@v5
       with:
-        package-name: 'smk-clean-bc/smk-clean-bc'
+        package-name: 'lift-and-shift-smk-clean-bc/lift-and-shift-smk-clean-bc'
         package-type: 'container'
         token: ${{ secrets.GHCR_TOKEN }}
         min-versions-to-keep: 10
@@ -96,4 +96,4 @@ jobs:
         curdir=$(pwd)
         PATH=$curdir:$PATH
         oc login --token=$OPENSHIFT_TOKEN_DEV --server=$OPENSHIFT_SERVER_URL
-        oc patch deployment smk-clean-bc-dp -p '[{"op":"add","path":"/spec/template/spec/containers/0/volumeMounts","value":[{"name":"config-volume","mountPath":"/srv/config"}]},{"op":"add","path":"/spec/template/spec/columes","value":{"name":"config-volume","configMap":{"name":"smk-clean-bc-dev-api-key","items":[{"key":"api-key","path":"route-planner.json"}]}}}]' --type json
+        oc patch deployment lift-and-shift-smk-clean-bc-dp -p '[{"op":"add","path":"/spec/template/spec/containers/0/volumeMounts","value":[{"name":"config-volume","mountPath":"/srv/config"}]},{"op":"add","path":"/spec/template/spec/columes","value":{"name":"config-volume","configMap":{"name":"smk-clean-bc-dev-api-key","items":[{"key":"api-key","path":"route-planner.json"}]}}}]' --type json
