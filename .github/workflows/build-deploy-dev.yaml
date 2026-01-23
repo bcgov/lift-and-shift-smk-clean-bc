@@ -2,6 +2,7 @@ name: smk-composite-action-tests
 
 # used on push for testing / development
 # on:
+
 # push:
 
 on:
