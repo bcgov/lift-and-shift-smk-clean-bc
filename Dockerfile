@@ -4,7 +4,8 @@ FROM node:alpine3.20 AS BUILD_IMAGE
 
 #RUN ls -la / &&  ls -la /srv && mkdir /srv
 WORKDIR /srv
-COPY ["package.json", "package-lock.json", "./"]
+#COPY ["package.json", "package-lock.json", "./"]
+COPY . . 
 
 # the package.json file is automatically created, Getting people
 # who are creating an SMK app may not have the skills to properly
