@@ -97,7 +97,7 @@ jobs:
         PATH=$curdir:$PATH
         oc login --token=$OPENSHIFT_TOKEN_DEV --server=$OPENSHIFT_SERVER_URL
         echo ----- APPLYING CONFIG PATCH -----
-        ./oc patch deployment lift-and-shift-smk-clean-bc-dp --type='strategy' -p '{
+        ./oc patch deployment lift-and-shift-smk-clean-bc-dp --type='strategic' -p '{
           "spec": {
             "template": {
               "spec": {
